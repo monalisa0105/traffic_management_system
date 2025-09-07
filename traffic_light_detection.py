@@ -33,16 +33,25 @@ def classify_light_color(crop):
         return "Unknown", (255, 255, 255)
 
 # Open the video file
-cap = cv2.VideoCapture("E:/github project/your_video.mp4")  # Replace with your video path
+input_video_path = "E:/github project/your_video.mp4"  # Replace with your video path
+cap = cv2.VideoCapture(input_video_path)
 
 if not cap.isOpened():
     print("Error: Could not open video file.")
     exit()
 
+# Get video properties
+frame_width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+frame_height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+fps = cap.get(cv2.CAP_PROP_FPS)
+
+# Define the codec and create VideoWriter object
+output_video_path = "E:/github project/output_video.avi"  # Change as needed
+fourcc = cv2.VideoWriter_fourcc(*'XVID')  # You can also try 'MP4V' for .mp4
+out = cv2.VideoWriter(output_video_path, fourcc, fps, (frame_width, frame_height))
+
 # Manually define ROI coordinates (adjust to your video)
-
 x, y, w, h = 900, 400, 110, 200
-
 
 while True:
     ret, frame = cap.read()
@@ -56,10 +65,16 @@ while True:
     cv2.rectangle(frame, (x, y), (x+w, y+h), color_bgr, 2)
     cv2.putText(frame, color_name, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, color_bgr, 2)
 
+    # Show the frame
     cv2.imshow("Traffic Light Color Detection", frame)
 
-    if cv2.waitKey(30) & 0xFF == 27:  # Press ESC to exit early
+    # Write the frame to output video
+    out.write(frame)
+
+    if cv2.waitKey(30) & 0xFF == 27:  # ESC to exit
         break
 
+# Release everything
 cap.release()
+out.release()
 cv2.destroyAllWindows()
