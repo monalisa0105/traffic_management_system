@@ -1,9 +1,10 @@
 ﻿streamlit==1.30.0
 opencv-python-headless==4.8.0.74
-numpy==1.24.3
+numpy==1.26.3
 Pillow==9.5.0
 pip>=25.2
 rich>=10.14.0
-setuptools
+setuptools>=68.0.0
+
 
 
